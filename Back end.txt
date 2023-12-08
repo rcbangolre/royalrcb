@@ -1,0 +1,144 @@
+package com.example.SpringMongoProject.StudentController;
+
+import com.example.SpringMongoProject.Entity.Student;
+import com.example.SpringMongoProject.Service.StudentServices;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@CrossOrigin(origins = "*")
+@RequestMapping("api/v1/student")
+public class StudentController {
+
+    @Autowired
+    private StudentServices studentServices;
+
+    @PostMapping(value = "/save")
+    private String saveStudent(@RequestBody Student students) {
+
+        studentServices.saveorUpdate(students);
+        return students.get_id();
+    }
+    
+    @GetMapping(value = "/getall")
+    public Iterable<Student> getStudents() {
+        return studentServices.li…
+[0:41 pm, 08/12/2023] akash Kle: package com.example.SpringMongoProject.Entity;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection ="students")
+public class Student {
+
+    @Id
+    private String _id;
+    private String studentname;
+    private String studentaddress;
+    private String mobile;
+
+
+    public Student(String _id, String studentname, String studentaddress, String mobile) {
+        this._id = _id;
+        this.studentname = studentname;
+        this.studentaddress = studentaddress;
+        this.mobile = mobile;
+    }
+
+
+    public Student() {
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    public String getStudentname() {
+        return studentname;
+    }
+
+    public void setStudentname(String studentname) {
+        this.studentname = studentname;
+    }
+
+    public String getStudentaddress() {
+        return studentaddress;
+    }
+
+    public void setStudentaddress(String studentaddress) {
+        this.studentaddress = studentaddress;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "_id='" + _id + '\'' +
+                ", studentname='" + studentname + '\'' +
+                ", studentaddress='" + studentaddress + '\'' +
+                ", mobile='" + mobile + '\'' +
+                '}';
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+ package com.example.SpringMongoProject;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SpringMongoProjectApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringMongoProjectApplication.class, args);
+	}
+
+}
+-----------------------------------------------------------------------------------------------------------------------------------------
+spring.application.name=SpringCrud
+server.port=1080
+spring.data.mongodb.host=localhost
+spring.data.mongodb.port=27017
+spring.data.mongodb.database=college
+spring.jackson.default-property-inclusion=NON_NULL
+------------------------------------------------------------------------------------------------------------------------------------------
+ package com.example.SpringMongoProject;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.example.SpringMongoProject.Entity.Student;
+import com.example.SpringMongoProject.StudentRepo.StudentRepo;
+
+@SpringBootTest
+class SpringMongoProjectApplicationTests {
+	@Autowired
+	private StudentRepo repo;
+
+
+	@Test
+	void postget() {
+		Student s=new Student();
+		s.set_id("101");
+		s.setStudentname("kalki");
+		s.setStudentaddress("chimmad");
+		s.setMobile("12345678986");
+		repo.save(s);
+	}
+
+}
